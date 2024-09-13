@@ -22,3 +22,12 @@ class CreateProduct(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class UpdateProduct(BaseModel):
+    name: str
+    quantity: int
+    price: Decimal
+
+    class Config:
+        from_attributes = True

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.schemas.ProductSchema import Product, CreateProduct
+from app.schemas.ProductSchema import Product, CreateProduct, UpdateProduct
 from app.controllers.ProductController import ProductController
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -69,13 +69,28 @@ async def create_product(product: CreateProduct):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.put("/products/{product_id}", response_model=Product)
-async def update_product(product_id: int, product: Product):
+@router.put("/products/{product_id}", response_model=UpdateProduct)
+async def update_product(product_id: int, product: UpdateProduct):
     try:
         product = ProductController().update_product(product_id, product)
         response = {
             "status": StatusCodes.STATUS_CODE_OK,
             "message": "Product updated",
+            "data": product
+        }
+        json_response = jsonable_encoder(response)
+        return JSONResponse(content=json_response)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/products/{product_id}", response_model=Product)
+async def delete_product(product_id: int):
+    try:
+        product = ProductController().delete_product(product_id)
+        response = {
+            "status": StatusCodes.STATUS_CODE_OK,
+            "message": "Product deleted",
             "data": product
         }
         json_response = jsonable_encoder(response)
