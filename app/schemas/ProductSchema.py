@@ -13,3 +13,12 @@ class Product(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class CreateProduct(BaseModel):
+    name: str
+    quantity: int
+    price: Decimal
+
+    class Config:
+        from_attributes = True

@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.schemas.ProductSchema import Product
+from app.schemas.ProductSchema import Product, CreateProduct
 from app.controllers.ProductController import ProductController
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
@@ -16,14 +16,14 @@ async def get_products():
         products = ProductController().read_products()
         if products:
             response = {
-                "status": StatusCodes.STATUS_CODE_BAD_REQUEST,
+                "status": StatusCodes.STATUS_CODE_OK,
                 "message": "Products found",
                 "data": products
             }
         else:
             response = {
                 "status": StatusCodes.STATUS_CODE_BAD_REQUEST,
-                "message": "Product not created",
+                "message": "No products found",
                 "data": None
             }
         json_response = jsonable_encoder(response)
@@ -38,7 +38,7 @@ async def get_product(product_id: int):
         product = ProductController().read_product(product_id)
         if product:
             response = {
-                "status": StatusCodes.STATUS_CODE_BAD_REQUEST,
+                "status": StatusCodes.STATUS_CODE_OK,
                 "message": "Product found",
                 "data": product
             }
@@ -54,12 +54,12 @@ async def get_product(product_id: int):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/products", response_model=Product)
-async def create_product(product: Product):
+@router.post("/products", response_model=CreateProduct)
+async def create_product(product: CreateProduct):
     try:
         product = ProductController().create_product(product)
         response = {
-            "status": StatusCodes.STATUS_CODE_BAD_REQUEST,
+            "status": StatusCodes.STATUS_CODE_CREATED,
             "message": "Product created",
             "data": product
         }
@@ -74,7 +74,7 @@ async def update_product(product_id: int, product: Product):
     try:
         product = ProductController().update_product(product_id, product)
         response = {
-            "status": StatusCodes.STATUS_CODE_BAD_REQUEST,
+            "status": StatusCodes.STATUS_CODE_OK,
             "message": "Product updated",
             "data": product
         }
