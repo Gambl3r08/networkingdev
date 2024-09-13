@@ -45,7 +45,7 @@ async def get_product(product_id: int):
         else:
             response = {
                 "status": StatusCodes.STATUS_CODE_BAD_REQUEST,
-                "message": "Product not created",
+                "message": "No products found",
                 "data": None
             }
         json_response = jsonable_encoder(response)
